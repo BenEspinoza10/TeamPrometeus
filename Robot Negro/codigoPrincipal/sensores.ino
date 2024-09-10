@@ -22,6 +22,7 @@ void calibrarSensores() {
     digitalWrite(LED, LOW);
     delay(10);
   }
+  //Calculo de umbrales por sensor en base a los máximos y minimos leídos en la calibración
   for (int i=0;i<numeroSensores;i++){
     valoresUmbrales[i] = ((sigueLineas.calibrationOn.minimum[i]+sigueLineas.calibrationOn.maximum[i])/2) + toleranciaUmbral;
   }
