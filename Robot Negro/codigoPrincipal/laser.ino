@@ -3,8 +3,7 @@
 void iniciarLaser() {
   if (!lox.begin()) {
     Serial.println(F("Error al inicializar el VL53L0X"));
-    while (1)
-      ;
+    while (1);
   }
 }
 

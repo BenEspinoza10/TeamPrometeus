@@ -8,7 +8,7 @@ void iniciarGiroscopio(){
       ;
   }
   Serial.println(F("Calculando compensación MPU6050..."));
-  mpu.calcGyroOffsets();  // Calibrar giroscopio
+  //mpu.calcGyroOffsets();  // Calibrar giroscopio
   Serial.println("¡Listo!\n");
 }
 
