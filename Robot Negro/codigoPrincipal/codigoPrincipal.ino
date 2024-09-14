@@ -14,7 +14,7 @@ BluetoothSerial SerialBT;
 //Seguidor de lineas central
 QTRSensors sigueLineas;                    // Objeto
 const uint8_t numeroSensores = 8;          //Constante para almacenar el Nº de sensores
-uint16_t valoresSensor[numeroSensores];  //Almacenar los valores de los sensores
+uint16_t valoresSensor[numeroSensores];    //Almacenar los valores de los sensores
 uint16_t valoresUmbrales[numeroSensores];  //Almacenar los valores de los umbrales de cada sensor
 int toleranciaUmbral = 200;                //Valor que se suma a los umbrales para asegurar la correcta lectura
 
@@ -61,20 +61,20 @@ int veld;  // Velocidad derecha
 int veli;  // Velocidad izquierda
 
 //Flags de decición
-int flagMarcador = false;               //Flag que indica si hay que leer el marcador de dirección false: se considera giro true: se considera marcador
+int flagMarcador = false;       //Flag que indica si hay que leer el marcador de dirección false: se considera giro true: se considera marcador
 int flagGiroIzquierda = false;  //Flag que indica si hay que girar a la izquierda en el siguiente cuadrado
 int flagGiroDerecha = false;    //Flag que indica si hay que girar a la derecha en el siguiente cuadrado
-int estado;                    // Variable que indica el estado en el que se está respecto a la pista: normal, intersección, gap, etc.
+int estado;                     // Variable que indica el estado en el que se está respecto a la pista: normal, intersección, gap, etc.
 
 
-int interseccionDinamica = 10; // Variable que indica el número de intersección donde se tiene que realizar el giro en base a la decisión
-int interseccionDecision = 9; // Variable que indica el número de intersección donde se tiene que realizar la lectura de decisión
-
+int inter seccionDinamica = 10;  // Variable que indica el número de intersección donde se tiene que realizar el giro en base a la decisión
+int interseccionDecision = 9;    // Variable que indica el número de intersección donde se tiene que realizar la lectura de decisión
+int interseccionFin = 12;        // Variable que indica el número de intersección donde el robot debe deteneres
 // Giroscopio
 MPU6050 mpu(Wire);  // Crea un objeto mpu
 
 // Láser
-Adafruit_VL53L0X lox = Adafruit_VL53L0X();
+Adafruit_VL53L0X lox = Adafruit_VL53L0X();  //Crea un objeto láser
 
 void setup() {
   Serial.begin(115200);
@@ -110,22 +110,17 @@ void loop() {
     I++;
     //Que sume las interseccciones que lleva
     cuadrado();
-    if (I == interseccionDinamica && flagGiroIzquierda == true) {  //Dirección de camino izquierda
-      girarIzquierda();
-    } else if (I == interseccionDinamica && flagGiroDerecha == true) {  //Dirección de camino derecha
-      girarDerecha();
-    }
   } else if (estado == 2) {  //Todo blanco
     Motor(18, 18);
-  } else if (estado == 4 && flagMarcador == true) {  //Marcador derecha
-    flagGiroDerecha = true;
-    flagMarcador = false;
+  } else if (estado == 3 && flagMarcador == false) {
+    girarIzquierda();
   } else if (estado == 3 && flagMarcador == true) {  //Marcador izquierda
     flagGiroIzquierda = true;
     flagMarcador = false;
-  } else if (estado == 3) {
-    girarIzquierda();
-  } else if (estado == 4) {
+  } else if (estado == 4 && flagMarcador == false) {
     girarDerecha();
+  } else if (estado == 4 && flagMarcador == true) {  //Marcador derecha
+    flagGiroDerecha = true;
+    flagMarcador = false;
   }
 }
