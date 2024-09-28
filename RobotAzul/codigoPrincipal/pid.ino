@@ -7,7 +7,7 @@ void pid() {
 
   posicion = map(posicion, 0, 7000, -255, 255);
   if (posicion > 200 && posicion < -200) {
-    kp = 1;
+    kp = 1.1;
     ki = 0;
     kd = 50;
   } else if (posicion < 20 && posicion > -20) {
@@ -15,9 +15,9 @@ void pid() {
     ki = 0;
     kd = 0;
   } else {
-    kp = 0.3;
+    kp = 0.4;
     ki = 0;
-    kd = 20;
+    kd = 22;
   }
   //Se calcula el error
   error = posicion - ref;

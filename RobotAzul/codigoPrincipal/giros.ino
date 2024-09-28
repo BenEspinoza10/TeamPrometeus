@@ -1,10 +1,6 @@
 void cuadrado() {
   //Se asegura que salga de la intersección para evitar marcar extra
-  Motor(0, 0);
-  delay(100);
-  Motor(50, 50);
-  delay(200);
-
+  
   if (I == interseccionDecision) {  // Me indica que despues viene la dirección de camino
     SerialBT.println("Llegue a la decision");
     flagMarcador = true;
@@ -18,11 +14,17 @@ void cuadrado() {
     girarDerecha();
   } else if (I == interseccionFin) {  // Final stop
     Motor(0, 0);
+    delay(1000);
     // funcionLEDS();
   }
+  Motor(0, 0);
+  delay(100);
+  Motor(50, 50);
+  delay(500);
 }
 
 //giro hacia la izquierda sobre el eje en 90 grados
+
 void girarIzquierda() {
   Motor(0, 0);
   delay(100);
