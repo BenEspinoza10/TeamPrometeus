@@ -67,7 +67,7 @@ int flagGiroDerecha = false;    //Flag que indica si hay que girar a la derecha 
 int estado;                     // Variable que indica el estado en el que se está respecto a la pista: normal, intersección, gap, etc.
 
 
-int inter seccionDinamica = 10;  // Variable que indica el número de intersección donde se tiene que realizar el giro en base a la decisión
+int interseccionDinamica = 10;  // Variable que indica el número de intersección donde se tiene que realizar el giro en base a la decisión
 int interseccionDecision = 9;    // Variable que indica el número de intersección donde se tiene que realizar la lectura de decisión
 int interseccionFin = 12;        // Variable que indica el número de intersección donde el robot debe deteneres
 // Giroscopio

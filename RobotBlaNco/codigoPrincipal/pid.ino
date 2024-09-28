@@ -4,8 +4,21 @@ void pid() {
   posicion = sigueLineas.readLineBlack(valoresSensor);
 
   //Se cambia de escala la posicion de [0,7000] a [-255,255]
-  posicion = map(posicion, 0, 7000, -255, 255);
 
+  posicion = map(posicion, 0, 7000, -255, 255);
+  if (posicion > 200 && posicion < -200) {
+    kp = 1;
+    ki = 0;
+    kd = 50;
+  } else if (posicion < 20 && posicion > -20) {
+    kp = 0;
+    ki = 0;
+    kd = 0;
+  } else {
+    kp = 0.6;
+    ki = 0;
+    kd = 60;
+  }
   //Se calcula el error
   error = posicion - ref;
 
@@ -53,3 +66,4 @@ void pid() {
   error3 = lastError;
   lastError = error;
 }
+
