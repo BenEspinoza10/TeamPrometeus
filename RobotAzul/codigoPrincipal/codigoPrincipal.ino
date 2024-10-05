@@ -23,10 +23,10 @@ const int frecuencia = 15000;
 const int resolucion = 8;
 
 //Constantes PID FUNCIONAL FINAL
-float kp = 0.3;  // Desviación del robot al respecto de la linea
+float kp;  // Desviación del robot al respecto de la linea
 // Mayor desviación == mayor corrección
-float ki = 0;      // Elimina el error ocupandoce de errores pasados
-float kd = 22;  // Reduce osilaciones
+float ki;  // Elimina el error ocupandoce de errores pasados
+float kd;  // Reduce osilaciones
 /*ultimo funcional
   float kp = 0.5;
   float ki = 0;
@@ -63,15 +63,21 @@ int veli;  // Velocidad izquierda
 //Flags de decición
 int flagMarcador = false;       //Flag que indica si hay que leer el marcador de dirección false: se considera giro true: se considera marcador
 int flagGiroIzquierda = false;  //Flag que indica si hay que girar a la izquierda en el siguiente cuadrado
-int flagGiroDerecha = false;    //Flag que indica si hay que girar a la derecha en el siguiente cuadrado
-int estado;                     // Variable que indica el estado en el que se está respecto a la pista: normal, intersección, gap, etc.
-bool pasitoD=false;
-bool pasitoI=false;
+int flagGiroDerecha = false;
+//Flag que indica si hay que leer el marcador de dirección false: se considera giro true: se considera marcador
+
+int flagMarcador2 = false;
+int flagGiroIzquierda2 = false;  //Flag que indica si hay que girar a la izquierda en el siguiente cuadrado
+int flagGiroDerecha2 = false;    //Flag que indica si hay que girar a la derecha en el siguiente cuadrado
+int estado;                      // Variable que indica el estado en el que se está respecto a la pista: normal, intersección, gap, etc.
+bool pasitoD = false;
+bool pasitoI = false;
 
 
-int interseccionDinamica = 2;  // Variable que indica el número de intersección donde se tiene que realizar el giro en base a la decisión
-int interseccionDecision = 1;    // Variable que indica el número de intersección donde se tiene que realizar la lectura de decisión
-int interseccionFin = 3;        // Variable que indica el número de intersección donde el robot debe deteneres
+int interseccionDinamica = 6;
+int interseccionDinamica2 = 7;  // Variable que indica el número de intersección donde se tiene que realizar el giro en base a la decisión
+int interseccionDecision = 5;   // Variable que indica el número de intersección donde se tiene que realizar la lectura de decisión
+int interseccionFin = 8;        // Variable que indica el número de intersección donde el robot debe deteneres
 // Giroscopio
 MPU6050 mpu(Wire);  // Crea un objeto mpu
 
@@ -84,9 +90,12 @@ void setup() {
   inicializarMotores();   //Configuración motores
   inicializarSensores();  //Configuración sensores
 
+
   //Esta parta de código es necesaria para iniciar i2c
   Wire.begin();
   Wire.setClock(100000);  // Configura la velocidad del I2C a 100kHz (puedes probar también 400kHz)
+
+  iniciarGiroscopio();
 
   pinMode(LED, OUTPUT);  //Led interna
   //calibracion
@@ -113,40 +122,77 @@ void loop() {
     SerialBT.println(I);
     //Que sume las interseccciones que lleva
     cuadrado();
-  } else if (estado == 2 && pasitoI==false && pasitoD==false) {  //Todo blanco
+  } else if (estado == 2 && pasitoI == false && pasitoD == false) {  //Todo blanco
     Motor(18, 18);
-  } else if (estado == 3 && flagMarcador == false &&pasitoI==false) {
-    Motor(50,50);
-    delay(200);
-    pasitoI=true;
-    Motor(0,0);
-    delay(1000);
-  } 
-  else if (estado == 2 && flagMarcador == false&&pasitoI==true) {
-    girarIzquierda();
-    pasitoI=false;
+
+  } else if (estado == 2 && flagMarcador == false && pasitoI == true && flagMarcador2 == false) {
+    girarIzquierdaGiroscopio();
+    pasitoI = false;
+
   }
-  else if (estado == 3 && flagMarcador == true) {  //Marcador izquierda
+  /////// repetir el código para la segunda marca, para el segundo robot
+  else if (estado == 2 && flagMarcador == false && pasitoD == true && flagMarcador2 == false) {
+    girarDerechaGiroscopio();
+    pasitoD = false;
+  }
+
+  else if (estado == 2 && flagMarcador == false && pasitoD == true && flagMarcador2 == false) {
+    girarDerechaGiroscopio();
+    pasitoD = false;
+  }
+
+  else if (estado == 3 && flagMarcador == false && pasitoI == false && flagMarcador2 == false) {
+    Motor(50, 50);
+    delay(180);
+    pasitoI = true;
+    Motor(0, 0);
+    delay(800);
+  }
+
+  else if (estado == 3 && flagMarcador == true && flagMarcador2 == false) {  //Marcador izquierda
     flagGiroIzquierda = true;
     flagMarcador = false;
-    Motor(50,50);
-    delay(500);
-  } else if (estado == 4 && flagMarcador == false&&pasitoD==false) {
-    Motor(50,50);
-    delay(150);
-    pasitoD=true;
-    Motor(0,0);
-    delay(500);
+    Motor(50, 50);
+    delay(180);
+
+  } else if (estado == 3 && flagMarcador == false && flagMarcador2 == true) {  //Marcador izquierda
+    flagGiroIzquierda2 = true;
+    flagMarcador2 = false;
+    Motor(50, 50);
+    delay(180);
+
   }
-    else if (estado == 2 && flagMarcador == false && pasitoD==true) {
-   girarDerecha();
-   pasitoD=false;
-  } 
-   else if (estado == 4 && flagMarcador == true) {  //Marcador derecha
+
+  else if (estado == 4 && flagMarcador == false && pasitoD == false) {
+    Motor(50, 50);
+    delay(180);
+    pasitoD = true;
+    Motor(0, 0);
+    delay(800);
+  }
+
+  else if (estado == 4 && flagMarcador == false && flagMarcador2 == true) {  //Marcador derecha
+    flagGiroDerecha2 = true;
+    flagMarcador2 = false;
+    Motor(50, 50);
+    delay(500);
+
+  }
+
+  else if (estado == 4 && flagMarcador == false && pasitoD == false && flagMarcador2 == false) {
+    Motor(50, 50);
+    delay(150);
+    pasitoD = true;
+    Motor(0, 0);
+    delay(500);
+
+
+  } else if (estado == 4 && flagMarcador2 == false && flagMarcador == true) {  //Marcador derecha
     flagGiroDerecha = true;
     flagMarcador = false;
-    Motor(50,50);
+    Motor(50, 50);
     delay(500);
   }
-  Serial.println(I);
+  SerialBT.println(I);
+  SerialBT.println(estado);
 }

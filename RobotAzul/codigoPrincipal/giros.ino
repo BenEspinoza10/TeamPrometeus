@@ -7,11 +7,16 @@ void cuadrado() {
     Motor(0, 0);
     delay(2000);
     Motor(50, 50);
-    delay(200);
+    delay(150);
   } else if (I == interseccionDinamica && flagGiroIzquierda == true) {  //Dirección de camino izquierda
-    girarIzquierda();
+    girarIzquierdaGiroscopio();
   } else if (I == interseccionDinamica && flagGiroDerecha == true) {  //Dirección de camino derecha
-    girarDerecha();
+    girarDerechaGiroscopio();
+    // segundo cuadrado
+  } else if (I == interseccionDinamica2 && flagGiroIzquierda2 == true) {  //Dirección de camino izquierda
+    girarIzquierdaGiroscopio();
+  } else if (I == interseccionDinamica2 && flagGiroDerecha2 == true) {  //Dirección de camino derecha
+    girarDerechaGiroscopio();
   } else if (I == interseccionFin) {  // Final stop
     Motor(0, 0);
     delay(1000);
@@ -29,7 +34,7 @@ void girarIzquierda() {
   Motor(0, 0);
   delay(100);
   Motor(50, -50);
-  delay(1000);
+  delay(950);
   Motor(50, 50);
   delay(250);
 }
@@ -39,13 +44,13 @@ void girarDerecha() {
   Motor(0, 0);
   delay(100);
   Motor(-50, 50);
-  delay(1000);
+  delay(950);
   Motor(50, 50);
   delay(250);
 }
 
 //Giro en 90 grados hacia la derecha con giroscopio
-void girarDerechaGiroscopio() {
+void girarIzquierdaGiroscopio() {
   //Primero frenar
   Motor(0, 0);
   delay(250);
@@ -65,7 +70,7 @@ void girarDerechaGiroscopio() {
 }
 
 //Giro en 90 grados hacia la izquierda con giroscopio
-void girarIzquierdaGiroscopio() {
+void girarDerechaGiroscopio() {
   //Primero frenar
   Motor(0, 0);
   delay(250);
