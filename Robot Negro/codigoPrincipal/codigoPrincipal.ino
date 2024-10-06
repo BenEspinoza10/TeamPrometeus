@@ -26,7 +26,7 @@ const int resolucion = 8;
 float kp = 0.5;  // Desviación del robot al respecto de la linea
 // Mayor desviación == mayor corrección
 float ki = 0;      // Elimina el error ocupandoce de errores pasados
-float kd = 56.58;  // Reduce osilaciones
+float kd = 20;  // Reduce osilaciones
 /*ultimo funcional
   float kp = 0.5;
   float ki = 0;
@@ -65,9 +65,11 @@ int flagMarcador = false;       //Flag que indica si hay que leer el marcador de
 int flagGiroIzquierda = false;  //Flag que indica si hay que girar a la izquierda en el siguiente cuadrado
 int flagGiroDerecha = false;    //Flag que indica si hay que girar a la derecha en el siguiente cuadrado
 int estado;                     // Variable que indica el estado en el que se está respecto a la pista: normal, intersección, gap, etc.
+bool pasitoD=false;
+bool pasitoI=false;
 
 
-int inter seccionDinamica = 10;  // Variable que indica el número de intersección donde se tiene que realizar el giro en base a la decisión
+int interseccionDinamica = 10;  // Variable que indica el número de intersección donde se tiene que realizar el giro en base a la decisión
 int interseccionDecision = 9;    // Variable que indica el número de intersección donde se tiene que realizar la lectura de decisión
 int interseccionFin = 12;        // Variable que indica el número de intersección donde el robot debe deteneres
 // Giroscopio
@@ -108,19 +110,44 @@ void loop() {
     pid();
   } else if (estado == 1) {  // Todo negro
     I++;
+    SerialBT.print("Contador es: ");
+    SerialBT.println(I);
     //Que sume las interseccciones que lleva
     cuadrado();
-  } else if (estado == 2) {  //Todo blanco
+  } else if (estado == 2 && pasitoI==false && pasitoD==false) {  //Todo blanco
     Motor(18, 18);
-  } else if (estado == 3 && flagMarcador == false) {
+  } else if (estado == 3 && flagMarcador == false &&pasitoI==false) {
+    Motor(50,50);
+    delay(200);
+    pasitoI=true;
+    Motor(0,0);
+    delay(1000);
+  } 
+  else if (estado == 2 && flagMarcador == false&&pasitoI==true) {
     girarIzquierda();
-  } else if (estado == 3 && flagMarcador == true) {  //Marcador izquierda
+    pasitoI=false;
+  }
+  else if (estado == 3 && flagMarcador == true) {  //Marcador izquierda
     flagGiroIzquierda = true;
     flagMarcador = false;
-  } else if (estado == 4 && flagMarcador == false) {
-    girarDerecha();
-  } else if (estado == 4 && flagMarcador == true) {  //Marcador derecha
+    Motor(50,50);
+    delay(500);
+  } else if (estado == 4 && flagMarcador == false&&pasitoD==false) {
+    Motor(50,50);
+    delay(150);
+    pasitoD=true;
+    Motor(0,0);
+    delay(500);
+  }
+    else if (estado == 2 && flagMarcador == false && pasitoD==true) {
+   girarDerecha();
+   pasitoD=false;
+  } 
+   else if (estado == 4 && flagMarcador == true) {  //Marcador derecha
     flagGiroDerecha = true;
     flagMarcador = false;
+    Motor(50,50);
+    delay(500);
   }
+  Serial.println(I);
 }
