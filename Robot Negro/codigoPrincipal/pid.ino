@@ -5,6 +5,19 @@ void pid() {
 
   //Se cambia de escala la posicion de [0,7000] a [-255,255]
   posicion = map(posicion, 0, 7000, -255, 255);
+  if (posicion > 200 && posicion < -200) {
+    kp = 1;
+    ki = 0;
+    kd = 50;
+  } else if (posicion < 15 && posicion > -15) {
+    kp = 0;
+    ki = 0;
+    kd = 0;
+  } else {
+    kp = 0.3;
+    ki = 0;
+    kd = 28;
+  }
 
   //Se calcula el error
   error = posicion - ref;
@@ -14,7 +27,7 @@ void pid() {
   derivada = error - lastError;
 
   //Se calcula el giro y las velocidades de cada rueda
-  giro = (kp * error ) + ( ki * integral) + ( kd * derivada);
+  giro = (kp * error) + (ki * integral) + (kd * derivada);
   veli = tp + giro;
   veld = tp - giro;
 
@@ -22,7 +35,7 @@ void pid() {
   if (veli > limiteSuperior) {
     veli = limiteSuperior;
   }
-  if ( veld > limiteSuperior) {
+  if (veld > limiteSuperior) {
     veld = limiteSuperior;
   }
 
@@ -30,7 +43,7 @@ void pid() {
   if (veli < limiteInferior) {
     veli = limiteInferior;
   }
-  if ( veld < limiteInferior) {
+  if (veld < limiteInferior) {
     veld = limiteInferior;
   }
 
@@ -44,7 +57,7 @@ void pid() {
   Serial.print(veld);
   Serial.print(" pos: ");
   Serial.println(error);*/
-  
+
 
   //Se actualizan los errores para la integral
   error6 = error5;

@@ -7,10 +7,7 @@ void cuadrado() {
 
   if (I == interseccionDecision) {  // Me indica que despues viene la dirección de camino
     flagMarcador = true;
-    Motor(0, 0);
-    delay(2000);
-    Motor(50, 50);
-    delay(200);
+    decision();
   } else if (I == interseccionDinamica && flagGiroIzquierda == true) {  //Dirección de camino izquierda
     girarIzquierda();
   } else if (I == interseccionDinamica && flagGiroDerecha == true) {  //Dirección de camino derecha
@@ -18,6 +15,28 @@ void cuadrado() {
   } else if (I == interseccionFin) {  // Final stop
     Motor(0, 0);
     // funcionLEDS();
+  }
+}
+
+void decision(){
+  while(flagMarcador == true){
+    Motor(20,20);
+    int caso = verificarCaso();
+    if(caso == 3){
+      flagGiroIzquierda = true;
+      flagMarcador = false;
+      while (caso==3){
+        Motor(20,20);
+        caso = verificarCaso();
+      }
+    }else if(caso == 4){
+      flagGiroDerecha = true;
+      flagMarcador = false;
+      while (caso==4){
+        Motor(20,20);
+        caso = verificarCaso();
+      }
+    }
   }
 }
 

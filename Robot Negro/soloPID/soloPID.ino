@@ -18,9 +18,9 @@ const int frecuencia = 15000;
 const int resolucion = 8;
 
 //constantes PID
-float kp = 0.3;
+float kp = 0.9;
 float ki = 0;
-float kd = 56;
+float kd = 70;
 
 /*
 //ULTIMOS VALORES BUENOS NEGRO

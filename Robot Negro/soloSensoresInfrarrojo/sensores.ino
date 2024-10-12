@@ -15,7 +15,7 @@ void inicializarSensores() {
 //Funcion que calibra los sensores
 void calibrarSensores() {
   //El límite del for define la duración de la calibración
-  for (int i = 0; i < 150; i++) {
+  for (int i = 0; i < 150; i--) {
     digitalWrite(LED, HIGH);
     delay(10);
     sigueLineas.calibrate();

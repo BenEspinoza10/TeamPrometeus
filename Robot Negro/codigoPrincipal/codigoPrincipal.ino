@@ -16,7 +16,7 @@ QTRSensors sigueLineas;                    // Objeto
 const uint8_t numeroSensores = 8;          //Constante para almacenar el Nº de sensores
 uint16_t valoresSensor[numeroSensores];    //Almacenar los valores de los sensores
 uint16_t valoresUmbrales[numeroSensores];  //Almacenar los valores de los umbrales de cada sensor
-int toleranciaUmbral = 200;                //Valor que se suma a los umbrales para asegurar la correcta lectura
+int toleranciaUmbral = 400;                //Valor que se suma a los umbrales para asegurar la correcta lectura
 
 //frecuencia y resolucion motores
 const int frecuencia = 15000;
@@ -25,7 +25,7 @@ const int resolucion = 8;
 //Constantes PID FUNCIONAL FINAL
 float kp = 0.5;  // Desviación del robot al respecto de la linea
 // Mayor desviación == mayor corrección
-float ki = 0;      // Elimina el error ocupandoce de errores pasados
+float ki = 0;   // Elimina el error ocupandoce de errores pasados
 float kd = 20;  // Reduce osilaciones
 /*ultimo funcional
   float kp = 0.5;
@@ -40,7 +40,7 @@ int derivada = 0;  // Predice el comportamiento de un error a futuro basándoce 
 float limiteSuperior = 230;   //Limite positivo
 float limiteInferior = -140;  // Limite negativo
 int ref = 0;                  // Referencia
-int tp = 35;                  // Velocidad
+int tp = 55;                  // Velocidad
 
 int I = 0;  //Contador de interesecciones
 
@@ -65,13 +65,13 @@ int flagMarcador = false;       //Flag que indica si hay que leer el marcador de
 int flagGiroIzquierda = false;  //Flag que indica si hay que girar a la izquierda en el siguiente cuadrado
 int flagGiroDerecha = false;    //Flag que indica si hay que girar a la derecha en el siguiente cuadrado
 int estado;                     // Variable que indica el estado en el que se está respecto a la pista: normal, intersección, gap, etc.
-bool pasitoD=false;
-bool pasitoI=false;
+bool pasitoD = false;
+bool pasitoI = false;
 
 
-int interseccionDinamica = 10;  // Variable que indica el número de intersección donde se tiene que realizar el giro en base a la decisión
-int interseccionDecision = 9;    // Variable que indica el número de intersección donde se tiene que realizar la lectura de decisión
-int interseccionFin = 12;        // Variable que indica el número de intersección donde el robot debe deteneres
+int interseccionDinamica = 6;  // Variable que indica el número de intersección donde se tiene que realizar el giro en base a la decisión
+int interseccionDecision = 5;   // Variable que indica el número de intersección donde se tiene que realizar la lectura de decisión
+int interseccionFin = 12;       // Variable que indica el número de intersección donde el robot debe deteneres
 // Giroscopio
 MPU6050 mpu(Wire);  // Crea un objeto mpu
 
@@ -80,13 +80,15 @@ Adafruit_VL53L0X lox = Adafruit_VL53L0X();  //Crea un objeto láser
 
 void setup() {
   Serial.begin(115200);
-  SerialBT.begin("Prometeus");
+  SerialBT.begin("PrometeusNegro");
   inicializarMotores();   //Configuración motores
   inicializarSensores();  //Configuración sensores
 
   //Esta parta de código es necesaria para iniciar i2c
   Wire.begin();
   Wire.setClock(100000);  // Configura la velocidad del I2C a 100kHz (puedes probar también 400kHz)
+
+  iniciarGiroscopio();
 
   pinMode(LED, OUTPUT);  //Led interna
   //calibracion
@@ -105,7 +107,8 @@ void setup() {
 
 void loop() {
   estado = verificarCaso();
-
+  SerialBT.print("caso ");
+  SerialBT.println(estado);
   if (estado == 0) {  //Valor por defecto
     pid();
   } else if (estado == 1) {  // Todo negro
@@ -114,40 +117,21 @@ void loop() {
     SerialBT.println(I);
     //Que sume las interseccciones que lleva
     cuadrado();
-  } else if (estado == 2 && pasitoI==false && pasitoD==false) {  //Todo blanco
-    Motor(18, 18);
-  } else if (estado == 3 && flagMarcador == false &&pasitoI==false) {
-    Motor(50,50);
-    delay(200);
-    pasitoI=true;
-    Motor(0,0);
-    delay(1000);
-  } 
-  else if (estado == 2 && flagMarcador == false&&pasitoI==true) {
-    girarIzquierda();
-    pasitoI=false;
-  }
-  else if (estado == 3 && flagMarcador == true) {  //Marcador izquierda
+  } else if (estado == 2) {  //Todo blanco
+    Motor(30, 30);
+  } else if (estado == 3 && flagMarcador == false) {
+    girarIzquierdaGiroscopio();
+  } else if (estado == 3 && flagMarcador == true) {  //Marcador izquierda
     flagGiroIzquierda = true;
     flagMarcador = false;
-    Motor(50,50);
+    Motor(50, 50);
     delay(500);
-  } else if (estado == 4 && flagMarcador == false&&pasitoD==false) {
-    Motor(50,50);
-    delay(150);
-    pasitoD=true;
-    Motor(0,0);
-    delay(500);
-  }
-    else if (estado == 2 && flagMarcador == false && pasitoD==true) {
-   girarDerecha();
-   pasitoD=false;
-  } 
-   else if (estado == 4 && flagMarcador == true) {  //Marcador derecha
+  } else if (estado == 4 && flagMarcador == false) {
+    girarDerechaGiroscopio();
+  } else if (estado == 4 && flagMarcador == true) {  //Marcador derecha
     flagGiroDerecha = true;
     flagMarcador = false;
-    Motor(50,50);
+    Motor(50, 50);
     delay(500);
   }
-  Serial.println(I);
 }
