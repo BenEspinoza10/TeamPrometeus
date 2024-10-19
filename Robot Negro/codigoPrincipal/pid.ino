@@ -5,22 +5,24 @@ void pid() {
 
   //Se cambia de escala la posicion de [0,7000] a [-255,255]
   posicion = map(posicion, 0, 7000, -255, 255);
-  if (posicion > 200 && posicion < 50) {
+  if (posicion < 15 && posicion > -15) {
+    kp = 0;
+    ki = 0;
+    kd = 0;
+  }
+  else if (posicion < 50 && posicion > -50) {
+    kp = 0.6;
+    ki = 0;
+    kd = 40;
+  }
+  else if (posicion < 100 && posicion > -100) {
     kp = 1;
     ki = 0;
     kd = 50;
-  } else if (posicion < 15 && posicion > -15) {
-    kp = 0;
+  }  else {
+    kp = 0.5;
     ki = 0;
-    kd = 0;
-  } else if (posicion < -50 && posicion > -200) {
-    kp = 0;
-    ki = 0;
-    kd = 0;
-  } else {
-    kp = 0.7;
-    ki = 0;
-    kd = 50;
+    kd = 19;
   }
 
   //Se calcula el error
@@ -56,11 +58,11 @@ void pid() {
 
   //Se imprimen las velocidades izquierda y derecha junto a la posicion
   /*Serial.print("izq: ");
-  Serial.print(veli);
-  Serial.print(" der: ");
-  Serial.print(veld);
-  Serial.print(" pos: ");
-  Serial.println(error);*/
+    Serial.print(veli);
+    Serial.print(" der: ");
+    Serial.print(veld);
+    Serial.print(" pos: ");
+    Serial.println(error);*/
 
 
   //Se actualizan los errores para la integral
