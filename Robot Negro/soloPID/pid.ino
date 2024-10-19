@@ -3,19 +3,23 @@ void pid() {
   posicion = sigueLineas.readLineBlack(valoresSensor);
 
   //Se cambia de escala la posicion de [0,7000] a [-255,255]
-  posicion = map(posicion, 0, 7000, -255, 255);
-  if (posicion > 200 && posicion < -200) {
-    kp = 1;
+ posicion = map(posicion, 0, 7000, -255, 255);  
+  if (posicion > 200 || posicion < -200) {
+    kp = 1;                               //extremo
     ki = 0;
     kd = 50;
-  } else if (posicion < 15 && posicion > -15) {
-    kp = 0;
+  } else if (posicion < 30 && posicion > -30) {
+    kp = 0;                              //centro
     ki = 0;
     kd = 0;
-  } else {
-    kp = 0.7;
+  } else if (posicion < 100 && posicion > -100) {
+    kp = 1;                             //valores entre 30 y 100
     ki = 0;
-    kd = 50;
+    kd = 30;
+  } else {
+    kp = 0.7;                            //valores entre 100 y 200
+    ki = 0;
+    kd = 30;
   }
 
   //Se calcula el error

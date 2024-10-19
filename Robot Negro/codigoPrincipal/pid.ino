@@ -5,7 +5,7 @@ void pid() {
 
   //Se cambia de escala la posicion de [0,7000] a [-255,255]
   posicion = map(posicion, 0, 7000, -255, 255);
-  if (posicion > 200 && posicion < -200) {
+  if (posicion > 200 && posicion < 50) {
     kp = 1;
     ki = 0;
     kd = 50;
@@ -13,10 +13,14 @@ void pid() {
     kp = 0;
     ki = 0;
     kd = 0;
-  } else {
-    kp = 0.3;
+  } else if (posicion < -50 && posicion > -200) {
+    kp = 0;
     ki = 0;
-    kd = 28;
+    kd = 0;
+  } else {
+    kp = 0.7;
+    ki = 0;
+    kd = 50;
   }
 
   //Se calcula el error

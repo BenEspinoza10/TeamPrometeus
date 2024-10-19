@@ -23,10 +23,10 @@ const int frecuencia = 15000;
 const int resolucion = 8;
 
 //Constantes PID FUNCIONAL FINAL
-float kp = 0.5;  // Desviación del robot al respecto de la linea
+float kp;  // Desviación del robot al respecto de la linea
 // Mayor desviación == mayor corrección
-float ki = 0;   // Elimina el error ocupandoce de errores pasados
-float kd = 20;  // Reduce osilaciones
+float ki;   // Elimina el error ocupandoce de errores pasados
+float kd;  // Reduce osilaciones
 /*ultimo funcional
   float kp = 0.5;
   float ki = 0;
@@ -65,8 +65,7 @@ int flagMarcador = false;       //Flag que indica si hay que leer el marcador de
 int flagGiroIzquierda = false;  //Flag que indica si hay que girar a la izquierda en el siguiente cuadrado
 int flagGiroDerecha = false;    //Flag que indica si hay que girar a la derecha en el siguiente cuadrado
 int estado;                     // Variable que indica el estado en el que se está respecto a la pista: normal, intersección, gap, etc.
-bool pasitoD = false;
-bool pasitoI = false;
+bool flagRampa = false;
 
 
 int interseccionDinamica = 6;  // Variable que indica el número de intersección donde se tiene que realizar el giro en base a la decisión
@@ -107,12 +106,15 @@ void setup() {
 
 void loop() {
   estado = verificarCaso();
+  verificarRampa();
   SerialBT.print("caso ");
   SerialBT.println(estado);
   if (estado == 0) {  //Valor por defecto
     pid();
   } else if (estado == 1) {  // Todo negro
-    I++;
+    if (flagRampa == true){
+      I++;
+    }
     SerialBT.print("Contador es: ");
     SerialBT.println(I);
     //Que sume las interseccciones que lleva
@@ -134,4 +136,4 @@ void loop() {
     Motor(50, 50);
     delay(500);
   }
-}
+} 
