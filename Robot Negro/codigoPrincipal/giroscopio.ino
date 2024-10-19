@@ -4,8 +4,7 @@ void iniciarGiroscopio(){
   // Inicializar el MPU6050
   if (mpu.begin() != 0) {
     Serial.println(F("Error al inicializar el MPU6050"));
-    while (1)
-      ;
+    while (1);
   }
   Serial.println(F("Calculando compensación MPU6050..."));
   //mpu.calcGyroOffsets();  // Calibrar giroscopio

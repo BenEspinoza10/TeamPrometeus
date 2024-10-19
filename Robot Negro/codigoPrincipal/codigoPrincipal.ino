@@ -25,7 +25,7 @@ const int resolucion = 8;
 //Constantes PID FUNCIONAL FINAL
 float kp;  // Desviación del robot al respecto de la linea
 // Mayor desviación == mayor corrección
-float ki;   // Elimina el error ocupandoce de errores pasados
+float ki;  // Elimina el error ocupandoce de errores pasados
 float kd;  // Reduce osilaciones
 /*ultimo funcional
   float kp = 0.5;
@@ -62,15 +62,16 @@ int veli;  // Velocidad izquierda
 
 //Flags de decición
 int flagMarcador = false;       //Flag que indica si hay que leer el marcador de dirección false: se considera giro true: se considera marcador
-int flagGiroIzquierda = false;  //Flag que indica si hay que girar a la izquierda en el siguiente cuadrado
-int flagGiroDerecha = false;    //Flag que indica si hay que girar a la derecha en el siguiente cuadrado
+int GiroIzquierda = 0;  //Flag que indica si hay que girar a la izquierda en el siguiente cuadrado
+int GiroDerecha = 0;    //Flag que indica si hay que girar a la derecha en el siguiente cuadrado
 int estado;                     // Variable que indica el estado en el que se está respecto a la pista: normal, intersección, gap, etc.
 bool flagRampa = false;
 
 
 int interseccionDinamica = 6;  // Variable que indica el número de intersección donde se tiene que realizar el giro en base a la decisión
-int interseccionDecision = 5;   // Variable que indica el número de intersección donde se tiene que realizar la lectura de decisión
-int interseccionFin = 12;       // Variable que indica el número de intersección donde el robot debe deteneres
+
+int interseccionDecision = 5;  // Variable que indica el número de intersección donde se tiene que realizar la lectura de decisión
+int interseccionFin = 12;        // Variable que indica el número de intersección donde el robot debe deteneres
 // Giroscopio
 MPU6050 mpu(Wire);  // Crea un objeto mpu
 
@@ -106,13 +107,13 @@ void setup() {
 
 void loop() {
   estado = verificarCaso();
-//  verificarRampa();
+  //  verificarRampa();
   SerialBT.print("caso ");
   SerialBT.println(estado);
   if (estado == 0) {  //Valor por defecto
     pid();
   } else if (estado == 1) {  // Todo negro
-    if (flagRampa == true){
+    if (flagRampa == true) {
       I++;
     }
     SerialBT.print("Contador es: ");
@@ -123,17 +124,7 @@ void loop() {
     Motor(30, 30);
   } else if (estado == 3 && flagMarcador == false) {
     girarIzquierdaGiroscopio();
-  } else if (estado == 3 && flagMarcador == true) {  //Marcador izquierda
-    flagGiroIzquierda = true;
-    flagMarcador = false;
-    Motor(50, 50);
-    delay(500);
   } else if (estado == 4 && flagMarcador == false) {
     girarDerechaGiroscopio();
-  } else if (estado == 4 && flagMarcador == true) {  //Marcador derecha
-    flagGiroDerecha = true;
-    flagMarcador = false;
-    Motor(50, 50);
-    delay(500);
   }
-} 
+}
