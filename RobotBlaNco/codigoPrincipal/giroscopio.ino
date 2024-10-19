@@ -18,3 +18,8 @@ int leerGiroscopio() {
   int angulo = int(mpu.getAngleZ());
   return angulo;
 }
+int leerAnguloX() {
+  mpu.update();  //Obtención de valores de MPU
+  int angulo = int(mpu.getAngleX());
+  return angulo;
+}

@@ -40,7 +40,7 @@ int derivada = 0;  // Predice el comportamiento de un error a futuro basándoce 
 float limiteSuperior = 230;   //Limite positivo
 float limiteInferior = -140;  // Limite negativo
 int ref = 0;                  // Referencia
-int tp = 35;                  // Velocidad
+int tp = 40;                  // Velocidad
 
 int I = 0;  //Contador de interesecciones
 
@@ -68,10 +68,14 @@ int estado;                     // Variable que indica el estado en el que se es
 
 
 int interseccionDinamica = 10;  // Variable que indica el número de intersección donde se tiene que realizar el giro en base a la decisión
-int interseccionDecision = 9;    // Variable que indica el número de intersección donde se tiene que realizar la lectura de decisión
-int interseccionFin = 12;        // Variable que indica el número de intersección donde el robot debe deteneres
+int interseccionDecision = 9;   // Variable que indica el número de intersección donde se tiene que realizar la lectura de decisión
+int interseccionFin = 12;       // Variable que indica el número de intersección donde el robot debe deteneres
 // Giroscopio
-MPU6050 mpu(Wire);  // Crea un objeto mpu
+MPU6050 mpu(Wire);       // Crea un objeto mpu
+int Xinicial;            //inclinacion inicial
+int cambiosX = 0;        //contador de cambios en X
+int anguloX;             // angulo actual X
+bool flagRampa = false;  //Flag que indica si se ha superado la rampa
 
 // Láser
 Adafruit_VL53L0X lox = Adafruit_VL53L0X();  //Crea un objeto láser
@@ -87,6 +91,7 @@ void setup() {
   Wire.setClock(100000);  // Configura la velocidad del I2C a 100kHz (puedes probar también 400kHz)
 
   pinMode(LED, OUTPUT);  //Led interna
+  iniciarGiroscopio();   //inicializa el giroscopio
   //calibracion
   //Se espera a que se apriete el botón para inicializar los sensores
   while (true) {
@@ -99,17 +104,32 @@ void setup() {
   //Se espera a que se apriete el boton para iniciar el programa
   while (digitalRead(BOTON) == 0) {
   }
+  Xinicial = leerAnguloX();  // establece el angulo inicial como el primero que lee el giroscopio
 }
 
 void loop() {
   estado = verificarCaso();
+  anguloX = leerAnguloX();  // actualiza el valor de la variable
+  SerialBT.println(anguloX);
+  if (flagRampa == false) {
 
-  if (estado == 0) {  //Valor por defecto
+    if (cambiosX == 0 && anguloX > Xinicial + 40) {
+      cambiosX = 1;
+    } else if (cambiosX == 1 && anguloX < Xinicial - 40) {
+      cambiosX = 2;
+    } else if (cambiosX == 2 && anguloX < Xinicial + 40 && anguloX > Xinicial - 40) {
+      cambiosX = 3;
+      flagRampa = true;
+    }
+  }
+   if (estado == 0) {  //Valor por defecto
     pid();
   } else if (estado == 1) {  // Todo negro
-    I++;
-    //Que sume las interseccciones que lleva
-    cuadrado();
+    if (flagRampa == true) {
+      I++;
+      //Que sume las interseccciones que lleva
+      cuadrado();
+    }
   } else if (estado == 2) {  //Todo blanco
     Motor(18, 18);
   } else if (estado == 3 && flagMarcador == false) {
