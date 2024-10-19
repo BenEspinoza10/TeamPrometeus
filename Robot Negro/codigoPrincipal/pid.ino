@@ -20,9 +20,9 @@ void pid() {
     ki = 0;        //3
     kd = 60;
   }  else {
-    kp = 1;
+    kp = 0.3;
     ki = 0;       //4
-    kd = 70;      
+    kd = 36;      
   }
 
   //Se calcula el error
