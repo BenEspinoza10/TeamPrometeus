@@ -106,7 +106,7 @@ void setup() {
 
 void loop() {
   estado = verificarCaso();
-  verificarRampa();
+//  verificarRampa();
   SerialBT.print("caso ");
   SerialBT.println(estado);
   if (estado == 0) {  //Valor por defecto
