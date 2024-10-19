@@ -5,35 +5,42 @@ void cuadrado() {
   Motor(50, 50);
   delay(200);
 
-  if (I == interseccionDecision) {  // Me indica que despues viene la dirección de camino
+  if (I == 5) {  // Me indica que despues viene la dirección de camino
     flagMarcador = true;
     decision();
-  } else if (I == interseccionDinamica && flagGiroIzquierda == true) {  //Dirección de camino izquierda
+    flagMarcador = true;
+    decision();
+    SerialBT.print("Contador_Flag: ");
+    SerialBT.println(GiroIzquierda);
+
+  } else if ((I == 6) || (I == 7) && (GiroIzquierda == 1) || (GiroIzquierda == 2)) {  //Dirección de camino izquierda
     girarIzquierda();
-  } else if (I == interseccionDinamica && flagGiroDerecha == true) {  //Dirección de camino derecha
+    GiroIzquierda = GiroIzquierda - 1;
+  } else if ((I == 6) || (I == 7) && (GiroDerecha == 1) || (GiroDerecha == 2)) {  //Dirección de camino derecha
     girarDerecha();
+    GiroDerecha = GiroDerecha - 1;
   } else if (I == interseccionFin) {  // Final stop
     Motor(0, 0);
     // funcionLEDS();
   }
 }
 
-void decision(){
-  while(flagMarcador == true){
-    Motor(20,20);
+void decision() {
+  while (flagMarcador == true) {
+    Motor(20, 20);
     int caso = verificarCaso();
-    if(caso == 3){
-      flagGiroIzquierda = true;
+    if (caso == 3) {
+      GiroIzquierda++;
       flagMarcador = false;
-      while (caso==3){
-        Motor(20,20);
+      while (caso == 3) {
+        Motor(20, 20);
         caso = verificarCaso();
       }
-    }else if(caso == 4){
-      flagGiroDerecha = true;
+    } else if (caso == 4) {
+      GiroDerecha++;
       flagMarcador = false;
-      while (caso==4){
-        Motor(20,20);
+      while (caso == 4) {
+        Motor(20, 20);
         caso = verificarCaso();
       }
     }
