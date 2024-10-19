@@ -18,3 +18,9 @@ int leerGiroscopio() {
   int angulo = int(mpu.getAngleZ());
   return angulo;
 }
+//Funcion que retorna la inclinacion del giroscopio
+int leerAnguloX(){
+  mpu.update();  
+int inclinacion = int(mpu.getAngleX());
+return inclinacion
+}

@@ -15,6 +15,6 @@ void iniciarGiroscopio(){
 //Funcion que retorna el ángulo actual del mpu como int
 int leerGiroscopio() {
   mpu.update();  //Obtención de valores de MPU
-  int angulo = int(mpu.getAngleZ());
+  int angulo = int(mpu.getAngleX());
   return angulo;
 }

@@ -1,5 +1,6 @@
 #include <Wire.h>
 #include <MPU6050_light.h>
+int anguloIN;
 
 // Giroscopio
 MPU6050 mpu(Wire);  // Crea un objeto mpu
@@ -14,10 +15,14 @@ void setup() {
 
   //Se inicia el giroscopio
   iniciarGiroscopio();  
+   anguloIN = leerGiroscopio();
 }
 
 void loop() {
   int angulo = leerGiroscopio();
-  Serial.println(angulo);  
+  Serial.print(angulo);  
+  if (angulo > anguloIN + 5 || angulo < anguloIN - 5){
+    Serial.println("Angulo diferente");
+  }
   delay(200);
 }

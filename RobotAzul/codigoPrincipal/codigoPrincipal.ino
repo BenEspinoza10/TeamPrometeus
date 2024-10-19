@@ -80,7 +80,9 @@ int interseccionDecision = 5;   // Variable que indica el número de intersecci�
 int interseccionFin = 8;        // Variable que indica el número de intersección donde el robot debe deteneres
 // Giroscopio
 MPU6050 mpu(Wire);  // Crea un objeto mpu
-
+int XInicial;
+int cambiosX = 0;
+int anguloX;
 // Láser
 Adafruit_VL53L0X lox = Adafruit_VL53L0X();  //Crea un objeto láser
 
