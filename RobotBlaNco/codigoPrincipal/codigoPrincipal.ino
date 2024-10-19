@@ -113,11 +113,11 @@ void loop() {
   SerialBT.println(anguloX);
   if (flagRampa == false) {
 
-    if (cambiosX == 0 && anguloX > Xinicial + 40) {
+    if (cambiosX == 0 && anguloX > Xinicial + 35) {
       cambiosX = 1;
-    } else if (cambiosX == 1 && anguloX < Xinicial - 40) {
+    } else if (cambiosX == 1 && anguloX < Xinicial - 35) {
       cambiosX = 2;
-    } else if (cambiosX == 2 && anguloX < Xinicial + 40 && anguloX > Xinicial - 40) {
+    } else if (cambiosX == 2 && anguloX < Xinicial + 35 && anguloX > Xinicial - 35) {
       cambiosX = 3;
       flagRampa = true;
     }
