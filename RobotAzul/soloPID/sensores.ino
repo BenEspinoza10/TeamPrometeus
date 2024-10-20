@@ -4,10 +4,9 @@
 //Para crear el objeto se debe usar: QTRSensors sigueLineas;
 void inicializarSensores() {
   sigueLineas.setTypeAnalog();
-  sigueLineas.setSensorPins((const uint8_t[]) {
-    26,25, 33, 32, 35, 34, 39,36
-  },
-  numeroSensores);
+  sigueLineas.setSensorPins((const uint8_t[]){
+                              26, 25, 33, 32, 35, 34, 39, 36 },
+                            numeroSensores);
   sigueLineas.setEmitterPin(27);
 }
 
@@ -22,5 +21,7 @@ void calibrarSensores() {
     digitalWrite(LED, LOW);
     delay(10);
   }
+  for (int i = 0; i < numeroSensores; i++) {
+    valoresUmbrales[i] = ((sigueLineas.calibrationOn.minimum[i] + sigueLineas.calibrationOn.maximum[i]) / 2) + toleranciaUmbral;
+  }
 }
-

@@ -9,18 +9,20 @@
 BluetoothSerial SerialBT;
 
 //seguidor de lineas central
-QTRSensors sigueLineas;
-const uint8_t numeroSensores = 8;
-uint16_t valoresSensor[numeroSensores];
+QTRSensors sigueLineas;                    // Objeto
+const uint8_t numeroSensores = 8;          //Constante para almacenar el Nº de sensores
+uint16_t valoresSensor[numeroSensores];    //Almacenar los valores de los sensores
+uint16_t valoresUmbrales[numeroSensores];  //Almacenar los valores de los umbrales de cada sensor
+int toleranciaUmbral = 400;                //Valor que se suma a los umbrales para asegurar la correcta lectura
 
 //frecuencia y resolucion motores
 const int frecuencia = 15000;
 const int resolucion = 8;
 
 //constantes PID
-float kp = 0.3;
-float ki = 0;
-float kd = 59;
+float kp;
+float ki;
+float kd;
 
 /*
 //ULTIMOS VALORES BUENOS NEGRO
@@ -53,10 +55,10 @@ int giro;
 int veld;
 int veli;
 
-void setup() {      
+void setup() {
   Serial.begin(115200);
   SerialBT.begin("Prometeus");
-  inicializarMotores();     //configuracion motores
+  inicializarMotores();   //configuracion motores
   inicializarSensores();  //configuracion sensores
 
   pinMode(LED, OUTPUT);  //led interna
