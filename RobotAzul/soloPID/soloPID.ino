@@ -1,6 +1,7 @@
 #include "pines.h"
 #include <QTRSensors.h>
 #include <BluetoothSerial.h>
+#include <Wire.h>
 
 //bluetoth
 #if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
