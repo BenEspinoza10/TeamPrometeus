@@ -80,4 +80,8 @@ void setup() {
 
 void loop() {
   pid();
+  for (int i = 0; i < numeroSensores; i++) {
+    SerialBT.print(valoresUmbrales[i]);
+  }
+  SerialBT.print("\n"); 
 }

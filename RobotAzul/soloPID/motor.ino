@@ -40,11 +40,11 @@ void Motoriz(int value) {
 void Motorde(int value) {
   //Se define la dirección en base al signo del valor
   if (value >= 0) {
-    digitalWrite(pinBI1, HIGH);
-    digitalWrite(pinBI2, LOW);
-  } else {
     digitalWrite(pinBI1, LOW);
     digitalWrite(pinBI2, HIGH);
+  } else {
+    digitalWrite(pinBI1, HIGH);
+    digitalWrite(pinBI2, LOW);
     value *= -1;
   }
   //Se asigna la velocidad pwm
