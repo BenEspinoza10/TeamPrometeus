@@ -74,7 +74,6 @@ int interseccionDecision = 5;  // Variable que indica el número de intersecció
 int interseccionFin = 12;        // Variable que indica el número de intersección donde el robot debe deteneres
 // Giroscopio
 MPU6050 mpu(Wire);  // Crea un objeto mpu
-
 // Láser
 Adafruit_VL53L0X lox = Adafruit_VL53L0X();  //Crea un objeto láser
 
@@ -89,7 +88,7 @@ void setup() {
   Wire.setClock(100000);  // Configura la velocidad del I2C a 100kHz (puedes probar también 400kHz)
 
   iniciarGiroscopio();
-
+  iniciarLaser();
   pinMode(LED, OUTPUT);  //Led interna
   //calibracion
   //Se espera a que se apriete el botón para inicializar los sensores
@@ -110,12 +109,13 @@ void loop() {
   //  verificarRampa();
   SerialBT.print("caso ");
   SerialBT.println(estado);
+  int distancia = leerLaser();//valores que da en milimetros
   if (estado == 0) {  //Valor por defecto
     pid();
   } else if (estado == 1) {  // Todo negro
-   // if (flagRampa == true) {
-      I++;
-   // }
+    // if (flagRampa == true) {
+    I++;
+    // }
     SerialBT.print("Contador es: ");
     SerialBT.println(I);
     //Que sume las interseccciones que lleva
@@ -126,5 +126,16 @@ void loop() {
     girarIzquierdaGiroscopio();
   } else if (estado == 4 && flagMarcador == false) {
     girarDerechaGiroscopio();
+  } else if (distancia <= 60) {//6cm
+    girarIzquierdaGiroscopio();
+    Motor(50, 50);//avance al azar
+    delay(1000);
+    girarDerechaGiroscopio();
+    Motor(50, 50);
+    delay(1000);
+    girarDerechaGiroscopio();
+    Motor(50, 50);
+    delay(1000);
+    girarIzquierdaGiroscopio();
   }
 }

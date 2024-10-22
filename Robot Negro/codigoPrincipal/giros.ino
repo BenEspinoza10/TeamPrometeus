@@ -76,7 +76,7 @@ void girarDerechaGiroscopio() {
   mpu.calcGyroOffsets();  // Calibrar giroscopio
   int angulo = leerGiroscopio();
   int anguloInicial = angulo;
-  while (angulo >= (anguloInicial - 80)) {
+  while (angulo >= (anguloInicial - 90)) {
     Motor(50, -50);
     angulo = leerGiroscopio();
   }
@@ -96,7 +96,7 @@ void girarIzquierdaGiroscopio() {
   mpu.calcGyroOffsets();  // Calibrar giroscopio
   int angulo = leerGiroscopio();
   int anguloInicial = angulo;
-  while (angulo <= (80 + anguloInicial)) {
+  while (angulo <= (90 + anguloInicial)) {
     Motor(-50, 50);
     angulo = leerGiroscopio();
   }
