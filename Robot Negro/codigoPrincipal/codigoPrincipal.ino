@@ -113,9 +113,9 @@ void loop() {
   if (estado == 0) {  //Valor por defecto
     pid();
   } else if (estado == 1) {  // Todo negro
-    if (flagRampa == true) {
+   // if (flagRampa == true) {
       I++;
-    }
+   // }
     SerialBT.print("Contador es: ");
     SerialBT.println(I);
     //Que sume las interseccciones que lleva

@@ -10,7 +10,7 @@ void loop() {
   Motor(50,50);
   delay(5000);
   Motor(-50,-50);
-  delay(5,000)
+  delay(5000);
   Motor(50,0);
   delay(5000);
   Motor(0,50);
