@@ -61,17 +61,17 @@ int veld;  // Velocidad derecha
 int veli;  // Velocidad izquierda
 
 //Flags de decición
-int flagMarcador = false;       //Flag que indica si hay que leer el marcador de dirección false: se considera giro true: se considera marcador
-int GiroIzquierda = 0;  //Flag que indica si hay que girar a la izquierda en el siguiente cuadrado
-int GiroDerecha = 0;    //Flag que indica si hay que girar a la derecha en el siguiente cuadrado
-int estado;                     // Variable que indica el estado en el que se está respecto a la pista: normal, intersección, gap, etc.
+int flagMarcador = false;  //Flag que indica si hay que leer el marcador de dirección false: se considera giro true: se considera marcador
+int GiroIzquierda = 0;     //Flag que indica si hay que girar a la izquierda en el siguiente cuadrado
+int GiroDerecha = 0;       //Flag que indica si hay que girar a la derecha en el siguiente cuadrado
+int estado;                // Variable que indica el estado en el que se está respecto a la pista: normal, intersección, gap, etc.
 bool flagRampa = false;
 
 
 int interseccionDinamica = 6;  // Variable que indica el número de intersección donde se tiene que realizar el giro en base a la decisión
 
 int interseccionDecision = 5;  // Variable que indica el número de intersección donde se tiene que realizar la lectura de decisión
-int interseccionFin = 12;        // Variable que indica el número de intersección donde el robot debe deteneres
+int interseccionFin = 12;      // Variable que indica el número de intersección donde el robot debe deteneres
 // Giroscopio
 MPU6050 mpu(Wire);  // Crea un objeto mpu
 // Láser
@@ -109,8 +109,13 @@ void loop() {
   //  verificarRampa();
   SerialBT.print("caso ");
   SerialBT.println(estado);
-  int distancia = leerLaser();//valores que da en milimetros
-  if (estado == 0) {  //Valor por defecto
+  int distancia = leerLaser();  //valores que da en milimetros
+  if (distancia <= 70 ) {
+    obst();}
+    else if(distancia >= 60){
+      Motor(50,50);
+    }
+  /*} else if (estado == 0) {  //Valor por defecto
     pid();
   } else if (estado == 1) {  // Todo negro
     // if (flagRampa == true) {
@@ -126,16 +131,5 @@ void loop() {
     girarIzquierdaGiroscopio();
   } else if (estado == 4 && flagMarcador == false) {
     girarDerechaGiroscopio();
-  } else if (distancia <= 60) {//6cm
-    girarIzquierdaGiroscopio();
-    Motor(50, 50);//avance al azar
-    delay(1000);
-    girarDerechaGiroscopio();
-    Motor(50, 50);
-    delay(1000);
-    girarDerechaGiroscopio();
-    Motor(50, 50);
-    delay(1000);
-    girarIzquierdaGiroscopio();
-  }
+  }*/
 }

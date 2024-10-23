@@ -11,18 +11,18 @@ void pid() {
     kd = 0;       //1
   } 
   else if (posicion < 50 && posicion > -50) {
-    kp = 0.3;
+    kp = 0.32;
     ki = 0;      //2
-    kd = 50;
+    kd = 22;
   }
   else if (posicion < 100 && posicion > -100) {
     kp = 0.5;
     ki = 0;        //3
     kd = 60;
   }  else {
-    kp = 2;
+    kp = 1;
     ki = 0;       //4
-    kd = 380;
+    kd = 70;
   }
 
   //Se calcula el error

@@ -15,3 +15,18 @@ int verificarCaso() {
   }
   return x;
 }
+
+
+void obst() {  //funcion para esquivar el obstaculo
+  girarIzquierdaGiroscopio();
+  Motor(50, 50);
+  delay(1200);
+  girarDerechaGiroscopio();
+  Motor(50, 50);
+  delay(2000);
+  girarDerechaGiroscopio();
+  Motor(50, 50);
+  delay(1200);
+  girarIzquierdaGiroscopio();
+}
+
